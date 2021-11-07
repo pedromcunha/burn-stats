@@ -18,9 +18,9 @@ const ultraRares = 10;
 
 function AccordionForTrait(trait_type, traitData) {
   return (
-    <div style={{"maxHeight":"50vh", "width": "80vw", "overflow": "hidden", "alignSelf": "center", "borderRadius": "1em", "margin": "2em"}}>
+    <div style={{"maxHeight":"50vh", "width": "90vw", "overflow": "hidden", "alignSelf": "center", "borderRadius": "1em", "margin": "2em"}}>
     <h2 style={{"fontSize": "1.5vh"}}>{trait_type.trait_type}</h2>
-    <div style={{"maxHeight":"40vh", "maxWidth": "80vw", "overflow": "scroll", "alignSelf": "center", "borderRadius": "1em"}}>
+    <div style={{"maxHeight":"40vh", "maxWidth": "90vw", "overflow": "scroll", "alignSelf": "center", "borderRadius": "1em"}}>
     <Accordion>
         {
           trait_type.traitData.map((trait, index) => {
@@ -38,7 +38,11 @@ function AccordionForTrait(trait_type, traitData) {
                           return (
                             <div key={wizId}>
                               <a href={"https://opensea.io/assets/0x251b5f14a825c537ff788604ea1b58e49b70726f/" + wizId} target="_blank" rel="noopener noreferrer">
-                                <img src={"https://portal.forgottenrunes.com/api/souls/img/" + wizId} style={{"width": "7em"}}/>
+                                <img 
+                                  src={"https://portal.forgottenrunes.com/api/souls/img/" + wizId} style={{"width": "7em"}}
+                                  onMouseOver={e => (e.currentTarget.src = "https://nftz.forgottenrunes.com/wizards/alt/400-nobg/wizard-" + wizId + ".png")}
+                                  onMouseOut={e => (e.currentTarget.src = "https://portal.forgottenrunes.com/api/souls/img/" + wizId)}
+                                />
                               </a>
                             </div>)
                         })}
@@ -83,7 +87,7 @@ export default function Home() {
       <h3>{data.burned} wizards burned | {1112 - data.burned} flames remain</h3>
       <img src="/tulip.gif" style={{"height": "5vh", "width": "5vh", "alignSelf": "center", "marginTop": "2vh"}}/>
       
-      <div style={{"height":"100vh", "width": "90vw", "overflow": "scroll", "alignSelf": "center", "display": "flex", "flexDirection": "row", "flexWrap": "wrap", "justifyContent": "center", "margin": "1em", "borderRadius": "1em"}}>
+      <div style={{"height":"100vh", "width": "95vw", "overflow": "scroll", "alignSelf": "center", "display": "flex", "flexDirection": "row", "flexWrap": "wrap", "justifyContent": "center", "margin": "1em", "borderRadius": "1em"}}>
         <AccordionForTrait trait_type="head" traitData={data.traits ? data.traits : []}/>
         <AccordionForTrait trait_type="body" traitData={data.traits ? data.traits : []}/>
         <AccordionForTrait trait_type="prop" traitData={data.traits ? data.traits : []}/>
