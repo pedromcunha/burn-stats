@@ -1,22 +1,24 @@
-.container {
-  padding: 0 2rem;
+@font-face {
+  font-family: "Alagard";
+  src: url("/fonts/alagard.otf") format("opentype");
 }
 
-.main {
-  min-height: 100vh;
-  padding: 4rem 0;
-  flex: 1;
+.container {
+  padding: 2rem 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  justify-content: space-between;
+  height: 100vh;
+  font-family: Alagard;
+  color: white;
+  background-color:black;
 }
 
 .footer {
   display: flex;
-  flex: 1;
-  padding: 2rem 0;
-  border-top: 1px solid #eaeaea;
+  flex: none;
+  padding: 0.5rem 0;
   justify-content: center;
   align-items: center;
 }
