@@ -40,7 +40,7 @@ function AccordionForTrait(trait_type, traitData) {
                               <a href={"https://opensea.io/assets/0x251b5f14a825c537ff788604ea1b58e49b70726f/" + wizId} target="_blank" rel="noopener noreferrer">
                                 <img 
                                   src={"https://portal.forgottenrunes.com/api/souls/img/" + wizId} style={{"width": "7em"}}
-                                  onMouseOver={e => (e.currentTarget.src = "https://nftz.forgottenrunes.com/wizards/alt/400-nobg/wizard-" + wizId + ".png")}
+                                  onMouseOver={e => (e.currentTarget.src = "https://nftz.forgottenrunes.com/wizards/" + wizId + ".png")}
                                   onMouseOut={e => (e.currentTarget.src = "https://portal.forgottenrunes.com/api/souls/img/" + wizId)}
                                 />
                               </a>
