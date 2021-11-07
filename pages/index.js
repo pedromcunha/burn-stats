@@ -36,8 +36,8 @@ function AccordionForTrait(trait_type, traitData) {
                       <div style={{"display": "flex", "width": "100%", "flex-wrap": "wrap"}}>
                         {trait.wizards.map((wizId, index) => {
                           return (
-                            <div>
-                              <a href={"https://opensea.io/assets/0x251b5f14a825c537ff788604ea1b58e49b70726f/" + wizId} target="_blank">
+                            <div key={wizId}>
+                              <a href={"https://opensea.io/assets/0x251b5f14a825c537ff788604ea1b58e49b70726f/" + wizId} target="_blank" rel="noopener noreferrer">
                                 <img src={"https://portal.forgottenrunes.com/api/souls/img/" + wizId} style={{"width": "7em"}}/>
                               </a>
                             </div>)
@@ -79,7 +79,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1>Forgotten Runes Wizard's Cult Burn Log</h1>
+      <h1>Forgotten Runes Wizard&apos;s Cult Burn Log</h1>
       <h3>{data.burned} wizards burned | {1112 - data.burned} flames remain</h3>
       <img src="/tulip.gif" style={{"height": "5vh", "width": "5vh", "alignSelf": "center", "marginTop": "2vh"}}/>
       
