@@ -16,14 +16,14 @@ const wizardsBurned = 300;
 const undesirables = 10;
 const ultraRares = 10;
 
-function AccordionForTrait(trait_type) {
+function AccordionForTrait(trait_type, traitData) {
   return (
     <div style={{"maxHeight":"50vh", "width": "80vw", "overflow": "hidden", "alignSelf": "center", "borderRadius": "1em", "margin": "2em"}}>
     <h2 style={{"fontSize": "1.5vh"}}>{trait_type.trait_type}</h2>
     <div style={{"maxHeight":"40vh", "maxWidth": "80vw", "overflow": "scroll", "alignSelf": "center", "borderRadius": "1em"}}>
     <Accordion>
         {
-          testData.map((trait, index) => {
+          trait_type.traitData.map((trait, index) => {
             if (trait.type == trait_type.trait_type && trait.name) {
               return (
                 <AccordionItem>
@@ -61,17 +61,14 @@ export default function Home() {
   useEffect(() => {
     async function getData() {
       try {
-        const asyncResponse = await fetch("https://aqueous-eyrie-64590.herokuapp.com/api/get", {mode: 'no-cors'});
-        setData(asyncResponse);
-        console.log(asyncResponse);
+        const asyncResponse = await fetch("https://aqueous-eyrie-64590.herokuapp.com/api/get");
+        const json = await asyncResponse.json();
+        setData(json);
       } catch (err) {
         console.error(err);
       }
     }
-    console.log('trying');
     getData();
-    console.log(data);
-    console.log('tried');
   }, []);
 
   return (
@@ -83,16 +80,16 @@ export default function Home() {
       </Head>
 
       <h1>Forgotten Runes Wizard's Cult Burn Log</h1>
-      <h3>{wizardsBurned} wizards burned | {1112 - wizardsBurned} flames remain | {undesirables} undesirables transmuted | {ultraRares} ultra rares transmuted</h3>
+      <h3>{data.burned} wizards burned | {1112 - data.burned} flames remain</h3>
       <img src="/tulip.gif" style={{"height": "5vh", "width": "5vh", "alignSelf": "center", "marginTop": "2vh"}}/>
       
       <div style={{"height":"100vh", "width": "90vw", "overflow": "scroll", "alignSelf": "center", "display": "flex", "flexDirection": "row", "flexWrap": "wrap", "justifyContent": "center", "margin": "1em", "borderRadius": "1em"}}>
-        <AccordionForTrait trait_type="head"/>
-        <AccordionForTrait trait_type="body"/>
-        <AccordionForTrait trait_type="prop"/>
-        <AccordionForTrait trait_type="familiar"/>
-        <AccordionForTrait trait_type="rune"/>
-        <AccordionForTrait trait_type="background"/>
+        <AccordionForTrait trait_type="head" traitData={data.traits ? data.traits : []}/>
+        <AccordionForTrait trait_type="body" traitData={data.traits ? data.traits : []}/>
+        <AccordionForTrait trait_type="prop" traitData={data.traits ? data.traits : []}/>
+        <AccordionForTrait trait_type="familiar" traitData={data.traits ? data.traits : []}/>
+        <AccordionForTrait trait_type="rune" traitData={data.traits ? data.traits : []}/>
+        <AccordionForTrait trait_type="background" traitData={data.traits ? data.traits : []}/>
       </div>
 
       <footer className={styles.footer}>
