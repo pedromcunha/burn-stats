@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import {
   Accordion,
@@ -10,101 +9,182 @@ import {
   AccordionItemPanel,
 } from 'react-accessible-accordion';
 import 'react-accessible-accordion/dist/fancy-example.css';
+import Select from "react-dropdown-select";
+import styled from '@emotion/styled';
+const wizzies = require("../data/wizzies.json");
+const traitList = ["head", "body", "prop", "familiar", "rune", "background"];
 
-const testData = require("../data/testData.json");
-const wizardsBurned = 300;
-const undesirables = 10;
-const ultraRares = 10;
+const StyledSelect = styled(Select)`
+  background: #333;
+  border: #333 !important;
+  color: #fff;
+  width: 10vw;
+  
+  @media only screen and (max-width: 600px) {
+    width: 15vw;
+  }
+  
+  .react-dropdown-select-clear,
+  .react-dropdown-select-dropdown-handle {
+    color: #fff;
+  }
+  .react-dropdown-select-option {
+    border: 1px solid #fff;
+  }
+  .react-dropdown-select-item {
+    color: #333;
+  }
+  .react-dropdown-select-input {
+    color: #fff;
+    font-family: Alagard;
+  }
+  .react-dropdown-select-dropdown {
+    position: absolute;
+    left: 0;
+    border: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: 2px;
+    overflow: auto;
+    z-index: 9;
+    background: #333;
+    box-shadow: none;
+    color: #fff !important;
+    width: 30vw;
+  }
+  .react-dropdown-select-item {
+    color: #f2f2f2;
+    border-bottom: 1px solid #333;
+       
+    :hover {
+       color: #ffffff80;
+    }
+  }
+  .react-dropdown-select-item.react-dropdown-select-item-selected,
+  .react-dropdown-select-item.react-dropdown-select-item-active {
+    //background: #111;
+    border-bottom: 1px solid #333;
+    color: #fff;
+    font-weight: bold;
+  }
+  .react-dropdown-select-item.react-dropdown-select-item-disabled {
+    background: #777;
+    color: #ccc;
+  }
+`;
 
-function AccordionForTrait(trait_type, traitData) {
-  return (
-    <div style={{"maxHeight":"50vh", "width": "90vw", "overflow": "hidden", "alignSelf": "center", "borderRadius": "1em", "margin": "2em"}}>
-    <h2 style={{"fontSize": "1.5vh"}}>{trait_type.trait_type}</h2>
-    <div style={{"maxHeight":"40vh", "maxWidth": "90vw", "overflow": "scroll", "alignSelf": "center", "borderRadius": "1em"}}>
-    <Accordion>
+function MainView({order, souls}) {
+    return (
+      <div style={{"display": "flex", "flexDirection": "column", "width": "100vw", "alignItems": "center"}}>
         {
-          trait_type.traitData.map((trait, index) => {
-            if (trait.type == trait_type.trait_type && trait.name) {
-              return (
-                <AccordionItem>
-                  <AccordionItemHeading>
-                      <AccordionItemButton>
-                          {trait.name} ({trait.diff} burned)
-                      </AccordionItemButton>
-                  </AccordionItemHeading>
-                  <AccordionItemPanel>
-                      <div style={{"display": "flex", "width": "100%", "flex-wrap": "wrap"}}>
-                        {trait.wizards.map((wizId, index) => {
-                          return (
-                            <div key={wizId}>
-                              <a href={"https://opensea.io/assets/0x251b5f14a825c537ff788604ea1b58e49b70726f/" + wizId} target="_blank" rel="noopener noreferrer">
-                                <img 
-                                  src={"https://portal.forgottenrunes.com/api/souls/img/" + wizId} style={{"width": "7em"}}
-                                  onMouseOver={e => (e.currentTarget.src = "https://nftz.forgottenrunes.com/wizards/" + wizId + ".png")}
-                                  onMouseOut={e => (e.currentTarget.src = "https://portal.forgottenrunes.com/api/souls/img/" + wizId)}
-                                />
-                              </a>
-                            </div>)
-                        })}
-                      </div>
-                  </AccordionItemPanel>
-                </AccordionItem>
-              );
-          }
-        })
+          order.map((token, index) => {
+            return (
+              <div key={index} style={{"display": "flex", "alignItems": "center", "margin": "5vh", "justifyItems": "start"}}>
+                <h2 style={{"alignSelf": "end", "marginRight": "1vw", "maxWidth": "16vw", "fontSize": "1.5vh"}}>{order.length - index}.</h2>
+                <div>
+                <a href={"https://opensea.io/assets/0x521f9c7505005cfa19a8e5786a9c3c9c9f5e6f42/" + token} target="_blank" rel="noopener noreferrer">
+                  <img src={"https://nftz.forgottenrunes.com/wizards/" + token + ".png"} style={{"width": "20vh", "maxWidth": "30vw"}}/>
+                </a>
+                <h3 style={{"fontSize": "1.2vh", "maxWidth": "20vh"}}>{wizzies[token].name}</h3>
+                </div>
+                <img src="/arrow.png" style={{"width": "5vh", "height": "1vh", "margin": "1vh", "maxWidth": "21vw"}}/>
+                <div>
+                <a href={"https://opensea.io/assets/0x251b5f14a825c537ff788604ea1b58e49b70726f/" + token} target="_blank" rel="noopener noreferrer">
+                  <img src={"https://portal.forgottenrunes.com/api/souls/img/" + token} style={{"width": "20vh", "maxWidth": "30vw"}}/>
+                </a>
+                <h3 style={{"fontSize": "1.2vh", "maxWidth": "20vh"}}>{souls[token].name}</h3>
+                </div>
+              </div>
+            )
+          })
         }
-      </Accordion>
-    </div>
-    </div>
-  )
+      </div>
+    )
 }
 
 export default function Home() {
   const [data, setData] = useState("");
+  const [filteredData, setFilteredData] = useState("");
+  const [selection, setSelection] = useState({'head': [], 'body': [], 'prop': [], 'familiar': [], 'rune': [], 'background': []});
 
-  useEffect(() => {
-    async function getData() {
+  useEffect(async () => {
       try {
         const asyncResponse = await fetch("https://aqueous-eyrie-64590.herokuapp.com/api/get");
         const json = await asyncResponse.json();
         setData(json);
+        setFilteredData(json);
       } catch (err) {
         console.error(err);
       }
-    }
-    getData();
   }, []);
 
+  function updateFilter(e, type) {
+    var currentSelection = {...selection};
+    currentSelection[type] = e;
+    setSelection(currentSelection);
+
+    var newOrder = [];
+    for (var i in data.order) {
+      var wizId = data.order[i];
+      var match = {'head': false, 'body': false, 'prop': false, 'familiar': false, 'rune': false, 'background': false};
+
+      for (type in currentSelection) {
+        if (currentSelection[type].length == 0) {
+          match[type] = true;
+        } else {
+          for (i in currentSelection[type]) {
+            var x = currentSelection[type][i];
+            if (wizzies[wizId][type] == x.name) {
+              match[type] = true;
+            }
+          }
+        }
+      }
+      if (match.head && match.body && match.prop && match.familiar && match.rune && match.background) {
+        newOrder.push(wizId);
+      }
+    }
+
+    setFilteredData({'order': newOrder});
+  }
+
   return (
+    <div>
+    {!data || !filteredData ? <div style={{"display": "flex", "alignItems": "center", "justifyContent": "center", "height": "100vh"}}><img src="/tulip.gif" style={{"height": "10vh", "width": "10vh"}}/></div> : 
     <div className={styles.container}>
-      <Head>
-        <title>Burn Log</title>
-        <meta name="description" content="Forgotten Runes Wizard's Cult Burn Log" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+        <Head>
+          <title>Burn Log</title>
+          <meta name="description" content="Forgotten Runes Wizard's Cult Burn Log" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
 
-      <h1>Forgotten Runes Wizard&apos;s Cult Burn Log</h1>
-      <h3>{data.burned} wizards burned | {1112 - data.burned} flames remain</h3>
-      <img src="/tulip.gif" style={{"height": "5vh", "width": "5vh", "alignSelf": "center", "marginTop": "2vh"}}/>
-      
-      <div style={{"height":"100vh", "width": "95vw", "overflow": "scroll", "alignSelf": "center", "display": "flex", "flexDirection": "row", "flexWrap": "wrap", "justifyContent": "center", "margin": "1em", "borderRadius": "1em"}}>
-        <AccordionForTrait trait_type="head" traitData={data.traits ? data.traits : []}/>
-        <AccordionForTrait trait_type="body" traitData={data.traits ? data.traits : []}/>
-        <AccordionForTrait trait_type="prop" traitData={data.traits ? data.traits : []}/>
-        <AccordionForTrait trait_type="familiar" traitData={data.traits ? data.traits : []}/>
-        <AccordionForTrait trait_type="rune" traitData={data.traits ? data.traits : []}/>
-        <AccordionForTrait trait_type="background" traitData={data.traits ? data.traits : []}/>
-      </div>
-
-      <footer className={styles.footer}>
+        <h1>Forgotten Runes Wizard&apos;s Cult Burn Log</h1>
+        <h3>{data.burned} wizards burned | {1112 - data.burned} flames remain</h3>
+        <div style={{"display": "flex", "justifyContent": "center", "marginTop": "1.5vh"}}>
+          {
+            traitList.map((trait, index) => {
+              return (
+                <StyledSelect key={index} placeholder={trait} options={data.traits.filter(x => (x['type'] == trait) && x['name'])} onChange={e => updateFilter(e, trait)} multi={true} searchable={true} noDataLabel="No matches found" labelField="name" valueField="name" closeOnSelect={true} />
+              )
+            })
+          }
+        </div>
+        <div style={{"height":"100vh", "width": "95vw", "overflow": "scroll", "overflowX": "hidden", "alignSelf": "center", "display": "flex", "flexDirection": "row", "flexWrap": "wrap", "justifyContent": "center", "borderRadius": "1em"}}>
+          <MainView order={filteredData.order} souls={data.souls}/>
+        </div>
+    </div>
+    }
+    <footer style={{"backgroundColor": "black", "color": "white", "fontFamily": "Alagard", "margin": "10px", "display": "flex", "justifyContent": "center"}}>
         <a
           href="https://twitter.com/tv3636"
           target="_blank"
           rel="noopener noreferrer"
+          style={{"margin": "10px"}}
         >
-          by tv
+          by tv 
         </a>
-      </footer>
+    </footer>
     </div>
   )
 }
