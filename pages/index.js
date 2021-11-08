@@ -76,7 +76,7 @@ function MainView({order, souls}) {
             return (
               <div key={index} style={{"display": "flex", "alignItems": "center", "margin": "5vh", "justifyItems": "start"}}>
                 <h2 style={{"alignSelf": "end", "marginRight": "1vw", "maxWidth": "16vw", "fontSize": "1.5vh"}}>{order.length - index}.</h2>
-                <div>
+                <div style={{"alignSelf": "self-start"}}>
                 <a href={"https://opensea.io/assets/0x521f9c7505005cfa19a8e5786a9c3c9c9f5e6f42/" + token} target="_blank" rel="noopener noreferrer">
                   <img src={"https://nftz.forgottenrunes.com/wizards/" + token + ".png"} style={{"width": "20vh", "maxWidth": "30vw"}}/>
                 </a>
