@@ -30,6 +30,7 @@ const StyledSelect = styled(Select)`
   .react-dropdown-select-input {
     color: #fff;
     font-family: Alagard;
+    width: 6em;
   }
   .react-dropdown-select-dropdown {
     position: absolute;
