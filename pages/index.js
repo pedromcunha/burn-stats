@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import {
-  Accordion,
-  AccordionItem,
-  AccordionItemHeading,
-  AccordionItemButton,
-  AccordionItemPanel,
-} from 'react-accessible-accordion';
 import 'react-accessible-accordion/dist/fancy-example.css';
 import Select from "react-dropdown-select";
 import styled from '@emotion/styled';
@@ -21,7 +14,7 @@ const StyledSelect = styled(Select)`
   width: 10vw;
   
   @media only screen and (max-width: 600px) {
-    width: 15vw;
+    width: 30vw;
   }
   
   .react-dropdown-select-clear,
@@ -161,7 +154,7 @@ export default function Home() {
 
         <h1>Forgotten Runes Wizard&apos;s Cult Burn Log</h1>
         <h3>{data.burned} wizards burned | {1112 - data.burned} flames remain</h3>
-        <div style={{"display": "flex", "justifyContent": "center", "marginTop": "1.5vh"}}>
+        <div style={{"display": "flex", "justifyContent": "center", "marginTop": "1.5vh", "maxWidth": "60vw", "alignSelf": "center", "flexWrap": "wrap"}}>
           {
             traitList.map((trait, index) => {
               return (
