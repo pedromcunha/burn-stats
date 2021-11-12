@@ -4,6 +4,7 @@ import styles from '../styles/Home.module.css'
 import 'react-accessible-accordion/dist/fancy-example.css';
 import Select from "react-dropdown-select";
 import styled from '@emotion/styled';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 const wizzies = require("../data/wizzies.json");
 const traitList = ["head", "body", "prop", "familiar", "rune", "background"];
 
@@ -69,6 +70,7 @@ const StyledSelect = styled(Select)`
 `;
 
 function MainView({order, souls}) {
+  console.log('creating');
     return (
       <div style={{"display": "flex", "flexDirection": "column", "width": "100vw", "alignItems": "center"}}>
         {
@@ -78,14 +80,14 @@ function MainView({order, souls}) {
                 <h2 style={{"alignSelf": "end", "marginRight": "1vw", "maxWidth": "16vw", "fontSize": "1.5vh"}}>{order.length - index}.</h2>
                 <div style={{"alignSelf": "self-start"}}>
                 <a href={"https://opensea.io/assets/0x521f9c7505005cfa19a8e5786a9c3c9c9f5e6f42/" + token} target="_blank" rel="noopener noreferrer">
-                  <img src={"https://nftz.forgottenrunes.com/wizards/" + token + ".png"} style={{"width": "20vh", "maxWidth": "30vw"}}/>
+                  <LazyLoadImage src={"https://nftz.forgottenrunes.com/wizards/" + token + ".png"} style={{"width": "20vh", "maxWidth": "30vw"}}/>
                 </a>
                 <h3 style={{"fontSize": "1.2vh", "maxWidth": "20vh"}}>{wizzies[token].name}</h3>
                 </div>
                 <img src="/arrow.png" style={{"width": "5vh", "height": "1vh", "margin": "1vh", "maxWidth": "21vw"}}/>
                 <div>
                 <a href={"https://opensea.io/assets/0x251b5f14a825c537ff788604ea1b58e49b70726f/" + token} target="_blank" rel="noopener noreferrer">
-                  <img src={"https://portal.forgottenrunes.com/api/souls/img/" + token} style={{"width": "20vh", "maxWidth": "30vw"}}/>
+                  <LazyLoadImage src={"https://portal.forgottenrunes.com/api/souls/img/" + token} style={{"width": "20vh", "maxWidth": "30vw"}}/>
                 </a>
                 <h3 style={{"fontSize": "1.2vh", "maxWidth": "20vh"}}>{souls[token].name}</h3>
                 </div>
