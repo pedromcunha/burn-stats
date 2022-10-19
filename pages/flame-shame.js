@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import OwnerRow from "../components/OwnerRow";
+import SiteHead from "../components/SiteHead";
 
 function MainView({ data }) {
   if (!data || !data.owners) {
@@ -59,15 +59,7 @@ export default function Home() {
         </div>
       ) : (
         <div className={styles.container}>
-          <Head>
-            <title>Burn Log</title>
-            <meta
-              name="description"
-              content="Forgotten Runes Wizard's Cult Burn Log"
-            />
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
-
+        <SiteHead/>
           <h1>Forgotten Runes Wizard&apos;s Cult Flame Shame</h1>
           <h3>Burn the wizards!</h3>
           <div
@@ -109,7 +101,7 @@ export default function Home() {
         }}
       >
         <a
-          href="https://twitter.com/tv3636"
+          href="https://twitter.com/thecodingadvent"
           target="_blank"
           rel="noopener noreferrer"
           style={{ margin: "10px" }}
