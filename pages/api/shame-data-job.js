@@ -34,17 +34,17 @@ export default async function handler(req, res) {
       .from("wizard-flame-owners")
       .download("owners");
 
-    // if (!bucketReadResponse.error && bucketReadResponse.data.text) {
-    //   const text = await bucketReadResponse.data.text();
-    //   const ownersJson = JSON.parse(text);
+    if (!bucketReadResponse.error && bucketReadResponse.data.text) {
+      const text = await bucketReadResponse.data.text();
+      const ownersJson = JSON.parse(text);
 
-    //   //Check if data is fresh
-    //   if (ownersJson && ownersJson.lastUpdated < new Date().getTime() - 3600) {
-    //     res.status(200);
-    //     console.log("Data is still fresh");
-    //     return;
-    //   }
-    // }
+      //Check if data is fresh
+      if (ownersJson && ownersJson.lastUpdated < new Date().getTime() - 1200) {
+        res.status(200);
+        console.log("Data is still fresh");
+        return;
+      }
+    }
 
     //Find all owners that own a wizard and a flame
     const ownersResponse = await fetch(
@@ -107,7 +107,9 @@ export default async function handler(req, res) {
         }
       });
       console.log("Sleeping");
-      await sleep(60000);
+      if (i + 1 < ownerChunks.length) {
+        await sleep(30000);
+      }
     }
 
     const shameData = {
