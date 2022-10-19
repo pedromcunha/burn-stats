@@ -1,6 +1,10 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useEnsName } from "wagmi";
 
+function truncateAddress(address, shrinkInidicator) {
+  return address.slice(0, 4) + (shrinkInidicator || "…") + address.slice(-4);
+}
+
 const OwnerRow = function ({ tokens }) {
   const { data: ensName } = useEnsName({
     address: tokens.owner,
@@ -22,8 +26,8 @@ const OwnerRow = function ({ tokens }) {
           target="_blank"
           rel="noreferrer"
         >
-          {ensName ? ensName : tokens.owner} | {tokens.flameCount}{" "}
-          {tokens.flameCount == 1 ? "flame" : "flames"}
+          {ensName ? ensName : truncateAddress(tokens.owner)} |{" "}
+          {tokens.flameCount} {tokens.flameCount == 1 ? "flame" : "flames"}
         </a>
       </h2>
       <div
@@ -58,6 +62,7 @@ const OwnerRow = function ({ tokens }) {
                     width: "100%",
                     paddingLeft: 20,
                     paddingRight: 20,
+                    paddingTop: 10,
                   }}
                 />
                 <h3 style={{ fontSize: 20, padding: 20 }}>{token.name}</h3>
