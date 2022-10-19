@@ -2,9 +2,8 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useEnsName } from "wagmi";
 
 const OwnerRow = function ({ tokens }) {
-  const owner = tokens[0].owner;
   const { data: ensName } = useEnsName({
-    address: owner,
+    address: tokens.owner,
   });
 
   return (
@@ -19,11 +18,12 @@ const OwnerRow = function ({ tokens }) {
     >
       <h2>
         <a
-          href={`https://etherscan.io/address/${owner}`}
+          href={`https://forgotten.market/address/${tokens.owner}`}
           target="_blank"
           rel="noreferrer"
         >
-          {ensName ? ensName : owner}
+          {ensName ? ensName : tokens.owner} | {tokens.flameCount}{" "}
+          {tokens.flameCount == 1 ? "flame" : "flames"}
         </a>
       </h2>
       <div
@@ -34,7 +34,7 @@ const OwnerRow = function ({ tokens }) {
           maxWidth: "95vw",
         }}
       >
-        {tokens.map((token, index) => {
+        {tokens.tokens.map((token, index) => {
           return (
             <a
               key={index}

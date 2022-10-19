@@ -9,6 +9,8 @@ export default async function handler(req, res) {
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const flameContract = "0x31158181b4b91a423bfdc758fc3bf8735711f9c5";
     const wizardContract = "0x521f9c7505005cfa19a8e5786a9c3c9c9f5e6f42";
+    const collectionSetId =
+      "b06af617550494133e4d774f150f3dd873c0fb95b5fa151180418edf405e6de4";
     let owners = [];
     let ownerTokens = [];
 
@@ -52,7 +54,7 @@ export default async function handler(req, res) {
     if (owners) {
       const tokenPromises = owners.map((owner) =>
         fetch(
-          `https://api.reservoir.tools/users/${owner}/tokens/v5?collection=${wizardContract}&sortBy=acquiredAt&sortDirection=desc&offset=0&limit=100`,
+          `https://api.reservoir.tools/users/${owner}/tokens/v5?collectionsSetId=${collectionSetId}&offset=0&limit=100`,
           {
             "x-api-key": RESERVOIR_KEY,
           }
@@ -64,24 +66,33 @@ export default async function handler(req, res) {
           .filter((promise) => promise.status === "fulfilled" && promise.value)
           .map((promise) => promise.value.json())
       );
-      const testing = responses.forEach((tokensData, i) => {
-        ownerTokens.push(
-          tokensData.tokens.map((tokenData) => {
-            return {
+      responses.forEach((tokensData, i) => {
+        const owner = {
+          owner: owners[i],
+          tokens: [],
+          flameCount: 0,
+        };
+
+        tokensData.tokens.forEach((tokenData) => {
+          if (tokenData.token.contract === flameContract) {
+            owner.flameCount = tokenData.ownership.tokenCount;
+          } else {
+            owner.tokens.push({
               owner: owners[i],
               contract: tokenData.token.contract,
               tokenId: tokenData.token.tokenId,
               name: tokenData.token.name,
               image: tokenData.token.image,
-            };
-          })
-        );
+            });
+          }
+        });
+        ownerTokens.push(owner);
       });
     }
 
     const shameData = {
       owners: ownerTokens.sort((a, b) => {
-        return b.length - a.length;
+        return b.flameCount - a.flameCount;
       }),
       lastUpdated: new Date().getTime(),
     };
