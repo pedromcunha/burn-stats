@@ -5,6 +5,7 @@ import "react-accessible-accordion/dist/fancy-example.css";
 import Select from "react-dropdown-select";
 import styled from "@emotion/styled";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import SiteHead from "../components/SiteHead";
 const wizzies = require("../data/wizzies.json");
 const traitList = ["head", "body", "prop", "familiar", "rune", "background"];
 
