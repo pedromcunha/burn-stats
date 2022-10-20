@@ -39,9 +39,11 @@ export default async function handler(req, res) {
       const ownersJson = JSON.parse(text);
 
       //Check if data is fresh
-      if (ownersJson && ownersJson.lastUpdated < new Date().getTime() - 1200) {
-        res.status(200);
+      if (ownersJson && new Date().getTime() - ownersJson.lastUpdated < 1200) {
         console.log("Data is still fresh");
+        res.status(200).json({
+          message: "Data is still fresh",
+        });
         return;
       }
     }

@@ -60,9 +60,9 @@ const OwnerRow = function ({ tokens }) {
                   src={`https://runes-turnarounds.s3.amazonaws.com/${token.tokenId}/${token.tokenId}.png`}
                   style={{
                     width: "100%",
-                    paddingLeft: 20,
-                    paddingRight: 20,
-                    paddingTop: 10,
+                    paddingLeft: 12,
+                    paddingRight: 12,
+                    paddingTop: 6,
                   }}
                 />
                 <h3 style={{ fontSize: 20, padding: 20 }}>{token.name}</h3>
@@ -70,7 +70,7 @@ const OwnerRow = function ({ tokens }) {
                   style={{
                     borderImageSource: "url(/newframe_black.png)",
                     borderImageSlice: "30 35",
-                    borderImageWidth: 24,
+                    borderImageWidth: "24px",
                     borderImageOutset: 0,
                     borderStyle: "solid",
                     borderImageRepeat: "round",
