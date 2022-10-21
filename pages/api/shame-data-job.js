@@ -4,15 +4,6 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_KEY;
 const RESERVOIR_KEY = process.env.NEXT_PUBLIC_RESERVOIR_API_KEY;
 
-function sliceIntoChunks(arr, chunkSize) {
-  const chunks = [];
-  for (let i = 0; i < arr.length; i += chunkSize) {
-    const chunk = arr.slice(i, i + chunkSize);
-    chunks.push(chunk);
-  }
-  return chunks;
-}
-
 function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
@@ -39,7 +30,10 @@ export default async function handler(req, res) {
       const ownersJson = JSON.parse(text);
 
       //Check if data is fresh
-      if (ownersJson && new Date().getTime() - ownersJson.lastUpdated < 1200) {
+      if (
+        ownersJson &&
+        new Date().getTime() - ownersJson.lastUpdated < 20 * 60 * 1000
+      ) {
         console.log("Data is still fresh");
         res.status(200).json({
           message: "Data is still fresh",
@@ -52,7 +46,9 @@ export default async function handler(req, res) {
     const ownersResponse = await fetch(
       `https://api.reservoir.tools/owners/v1?collection=${flameContract}&offset=0&limit=500`,
       {
-        "x-api-key": RESERVOIR_KEY,
+        headers: {
+          "x-api-key": RESERVOIR_KEY,
+        },
       }
     );
 
@@ -67,52 +63,43 @@ export default async function handler(req, res) {
 
     const flameOwnerKeys = Object.keys(flameOwners);
 
-    //Chunk it up to stay below api limits
-    const ownerChunks = sliceIntoChunks(flameOwnerKeys, 50);
-
-    for (let i = 0; i < ownerChunks.length; i++) {
-      console.log("Working");
-      let ownerChunk = ownerChunks[i];
-      const tokenPromises = ownerChunk.map((address) =>
-        fetch(
-          `https://api.reservoir.tools/users/${address}/tokens/v5?collection=${wizardContract}&offset=0&limit=100`,
-          {
+    const tokenPromises = flameOwnerKeys.map((address) =>
+      fetch(
+        `https://api.reservoir.tools/users/${address}/tokens/v5?collection=${wizardContract}&offset=0&limit=100`,
+        {
+          headers: {
             "x-api-key": RESERVOIR_KEY,
-          }
-        )
-      );
-      const promises = await Promise.allSettled(tokenPromises);
-      const responses = await Promise.all(
-        promises
-          .filter((promise) => promise.status === "fulfilled" && promise.value)
-          .map((promise) => promise.value.json())
-      );
-      responses.forEach((tokensData, i) => {
-        if (tokensData && tokensData.tokens && tokensData.tokens.length > 0) {
-          const address = ownerChunk[i];
-          const owner = {
-            owner: address,
-            tokens: [],
-            flameCount: flameOwners[address],
-          };
-
-          tokensData.tokens.forEach((tokenData) => {
-            owner.tokens.push({
-              owner: flameOwners[i],
-              contract: tokenData.token.contract,
-              tokenId: tokenData.token.tokenId,
-              name: tokenData.token.name,
-              image: tokenData.token.image,
-            });
-          });
-          ownerTokens.push(owner);
+          },
         }
-      });
-      console.log("Sleeping");
-      if (i + 1 < ownerChunks.length) {
-        await sleep(30000);
+      )
+    );
+    const promises = await Promise.allSettled(tokenPromises);
+    const responses = await Promise.all(
+      promises
+        .filter((promise) => promise.status === "fulfilled" && promise.value)
+        .map((promise) => promise.value.json())
+    );
+    responses.forEach((tokensData, i) => {
+      if (tokensData && tokensData.tokens && tokensData.tokens.length > 0) {
+        const address = flameOwnerKeys[i];
+        const owner = {
+          owner: address,
+          tokens: [],
+          flameCount: flameOwners[address],
+        };
+
+        tokensData.tokens.forEach((tokenData) => {
+          owner.tokens.push({
+            owner: flameOwners[i],
+            contract: tokenData.token.contract,
+            tokenId: tokenData.token.tokenId,
+            name: tokenData.token.name,
+            image: tokenData.token.image,
+          });
+        });
+        ownerTokens.push(owner);
       }
-    }
+    });
 
     const shameData = {
       owners: ownerTokens.sort((a, b) => b.flameCount - a.flameCount),
