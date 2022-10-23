@@ -261,7 +261,11 @@ export default function Home() {
             }}
           >
             {data.burned} wizards burned | {1112 - data.burned} flames remain |{" "}
-            <Link href="/flame-shame">
+            <Link passHref href="/burn-board">
+              <span style={{ cursor: "pointer" }}>Burn Board</span>
+            </Link>
+            |{" "}
+            <Link href="/flame-shame" passHref>
               <img
                 src="/Item-candle.png"
                 height="16"

@@ -1,17 +1,22 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useEnsName } from "wagmi";
+import { useInView } from "react-intersection-observer";
 
 function truncateAddress(address, shrinkInidicator) {
   return address.slice(0, 4) + (shrinkInidicator || "…") + address.slice(-4);
 }
 
 const OwnerRow = function ({ tokens }) {
+  const { ref, inView } = useInView();
   const { data: ensName } = useEnsName({
     address: tokens.owner,
+    cacheTime: 60 * 60000,
+    enabled: inView,
   });
 
   return (
     <div
+      ref={ref}
       style={{
         display: "flex",
         flexDirection: "column",
