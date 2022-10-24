@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import LeaderboardRow from "../components/LeaderboardRow";
+import SiteHead from "../components/SiteHead";
 
 function MainView({ data }) {
   if (!data || !data.leaderboard) {
@@ -77,15 +78,7 @@ export default function Home() {
         </div>
       ) : (
         <div className={styles.container}>
-          <Head>
-            <title>Burn Board</title>
-            <meta
-              name="description"
-              content="Forgotten Runes Wizard's Cult Burn Board"
-            />
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
-
+          <SiteHead title={'Burn Board'}/>
           <h1>Forgotten Runes Wizard&apos;s Cult Burn Board</h1>
           <h3>Does your flame burn the brightest?</h3>
           <div

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import "react-accessible-accordion/dist/fancy-example.css";
 import Select from "react-dropdown-select";
 import styled from "@emotion/styled";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import SiteHead from "../components/SiteHead";
 const wizzies = require("../data/wizzies.json");
 const traitList = ["head", "body", "prop", "familiar", "rune", "background"];
 
@@ -242,15 +242,7 @@ export default function Home() {
         </div>
       ) : (
         <div className={styles.container}>
-          <Head>
-            <title>Burn Log</title>
-            <meta
-              name="description"
-              content="Forgotten Runes Wizard's Cult Burn Log"
-            />
-            <link rel="icon" href="/favicon.ico" />
-          </Head>
-
+          <SiteHead title={'Burn Log'}/>
           <h1>Forgotten Runes Wizard&apos;s Cult Burn Log</h1>
           <h3
             style={{
