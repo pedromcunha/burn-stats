@@ -59,7 +59,7 @@ export default function Home() {
         </div>
       ) : (
         <div className={styles.container}>
-        <SiteHead title={'Flame Shame'}/>
+        <SiteHead name={'Flame Shame'}/>
           <h1>Forgotten Runes Wizard&apos;s Cult Flame Shame</h1>
           <h3>Burn the wizards!</h3>
           <div

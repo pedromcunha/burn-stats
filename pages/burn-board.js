@@ -78,7 +78,7 @@ export default function Home() {
         </div>
       ) : (
         <div className={styles.container}>
-          <SiteHead title={'Burn Board'}/>
+          <SiteHead name={'Burn Board'}/>
           <h1>Forgotten Runes Wizard&apos;s Cult Burn Board</h1>
           <h3>Does your flame burn the brightest?</h3>
           <div

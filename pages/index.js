@@ -242,7 +242,7 @@ export default function Home() {
         </div>
       ) : (
         <div className={styles.container}>
-          <SiteHead title={'Burn Log'}/>
+          <SiteHead name={'Burn Log'}/>
           <h1>Forgotten Runes Wizard&apos;s Cult Burn Log</h1>
           <h3
             style={{
