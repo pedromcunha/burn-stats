@@ -1,24 +1,43 @@
 import React, { useEffect, useState } from "react";
+import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import OwnerRow from "../components/OwnerRow";
+import LeaderboardRow from "../components/LeaderboardRow";
 import SiteHead from "../components/SiteHead";
 
 function MainView({ data }) {
-  if (!data || !data.owners) {
+  if (!data || !data.leaderboard) {
     return null;
   }
+
+  const tableHeaders = ["Rank", "Address", "Flames Burned", "Last Burn"];
 
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
+        display: "table",
         width: "100vw",
-        alignItems: "center",
+        marginTop: 40,
       }}
     >
-      {data.owners.map((tokens, index) => (
-        <OwnerRow key={index} tokens={tokens} />
+      <div style={{ display: "table-header-group" }}>
+        {tableHeaders.map((header, i) => {
+          return (
+            <div
+              key={i}
+              style={{
+                display: "table-cell",
+                paddingBottom: 20,
+                whiteSpace: "nowrap",
+                padding: 5,
+              }}
+            >
+              {header}
+            </div>
+          );
+        })}
+      </div>
+      {data.leaderboard.map((data, index) => (
+        <LeaderboardRow key={index} data={data} rank={index + 1} />
       ))}
     </div>
   );
@@ -30,7 +49,7 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const ownersResponse = await fetch("/api/shame-data");
+        const ownersResponse = await fetch("/api/leaderboard-data");
         const json = await ownersResponse.json();
         setData(json);
       } catch (err) {
@@ -59,31 +78,19 @@ export default function Home() {
         </div>
       ) : (
         <div className={styles.container}>
-        <SiteHead name={'Flame Shame'}/>
-          <h1>Forgotten Runes Wizard&apos;s Cult Flame Shame</h1>
-          <h3>Burn the wizards!</h3>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "1.5vh",
-              maxWidth: "60vw",
-              alignSelf: "center",
-              flexWrap: "wrap",
-            }}
-          ></div>
+          <SiteHead name={'Burn Board'}/>
+          <h1>Forgotten Runes Wizard&apos;s Cult Burn Board</h1>
+          <h3>Does your flame burn the brightest?</h3>
           <div
             style={{
               height: "100vh",
               width: "95vw",
               overflow: "scroll",
-              overflowX: "hidden",
               alignSelf: "center",
               display: "flex",
               flexDirection: "row",
               flexWrap: "wrap",
-              justifyContent: "center",
-              borderRadius: "1em",
+              maxWidth: 800,
             }}
           >
             <MainView data={data} />

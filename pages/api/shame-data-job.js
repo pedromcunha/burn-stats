@@ -4,12 +4,6 @@ const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_KEY;
 const RESERVOIR_KEY = process.env.NEXT_PUBLIC_RESERVOIR_API_KEY;
 
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-
 export default async function handler(req, res) {
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);

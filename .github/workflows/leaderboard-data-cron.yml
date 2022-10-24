@@ -1,5 +1,4 @@
-# .github/workflows/scheduled-builds.yml
-name: Trigger API to recalculate shame data
+name: Trigger API to recalculate leaderboard data
 
 on:
   schedule:
@@ -7,9 +6,9 @@ on:
     - cron: "0 * * * *"
 jobs:
   build:
-    name: Recalculate Flame Shame Data
+    name: Recalculate leaderboard Data
     runs-on: ubuntu-latest
     steps:
       - name: cURL request
         # Hit the webhook endpoint to rebuild  from the "main" branch
-        run: curl -X POST -d {} https://burnlog.vercel.app/api/shame-data-job
+        run: curl -X POST -d {} https://burn-stats-iota.vercel.app/api/leadeboard-cron
