@@ -6,11 +6,17 @@ const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_KEY;
 export default async function handler(req, res) {
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const query = req.query;
+    let fileName = "flame";
+
+    if (query.filter && query.filter === "treatBox") {
+      fileName = "treatBox";
+    }
 
     //Read file from bucket
     const bucketReadResponse = await supabase.storage
-      .from("flame-leaderboard")
-      .download("burners");
+      .from("leaderboard")
+      .download(fileName);
 
     if (!bucketReadResponse.error && bucketReadResponse.data.text) {
       const text = await bucketReadResponse.data.text();

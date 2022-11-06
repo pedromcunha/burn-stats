@@ -10,5 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: cURL request
-        # Hit the webhook endpoint to rebuild  from the "main" branch
-        run: curl -X POST -d {} https://burn-stats-iota.vercel.app/api/leadeboard-cron
+        run: curl -X POST -d {} https://burn-stats-iota.vercel.app/api/leadeboard-job
+      - name: cURL request
+        run: curl -X POST -d {} https://burn-stats-iota.vercel.app/api/leadeboard-job-treats

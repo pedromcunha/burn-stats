@@ -1,15 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import LeaderboardRow from "../components/LeaderboardRow";
 import SiteHead from "../components/SiteHead";
+import { useInView } from "react-intersection-observer";
 
-function MainView({ data }) {
+function MainView({ data, filter }) {
+  const { ref, inView } = useInView();
+  const [limit, setLimit] = useState(40);
+
+  useEffect(() => {
+    if (inView && data.leaderboard && limit !== data.leaderboard.length) {
+      setLimit((limit) => {
+        return limit + 20;
+      });
+    }
+  }, [inView, data.leaderboard]);
+
   if (!data || !data.leaderboard) {
     return null;
   }
 
-  const tableHeaders = ["Rank", "Address", "Flames Burned", "Last Burn"];
+  const burnColumnName =
+    filter === "treatBox" ? "Boxes Burned" : "Flames Burned";
+
+  const tableHeaders = ["Rank", "Address", burnColumnName, "Last Burn"];
 
   return (
     <div
@@ -36,8 +51,11 @@ function MainView({ data }) {
           );
         })}
       </div>
-      {data.leaderboard.map((data, index) => (
-        <LeaderboardRow key={index} data={data} rank={index + 1} />
+      {data.leaderboard.slice(0, limit).map((rowData, index) => (
+        <>
+          <LeaderboardRow key={index} data={rowData} rank={index + 1} />
+          {index === limit - 5 && <div key={index} ref={ref}></div>}
+        </>
       ))}
     </div>
   );
@@ -45,11 +63,22 @@ function MainView({ data }) {
 
 export default function Home() {
   const [data, setData] = useState({});
+  const [filter, setFilter] = useState("flame");
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const ownersResponse = await fetch("/api/leaderboard-data");
+        if (scrollContainerRef.current && scrollContainerRef.current.scrollTo) {
+          scrollContainerRef.current.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "smooth",
+          });
+        }
+        const ownersResponse = await fetch(
+          `/api/leaderboard-data?filter=${filter}`
+        );
         const json = await ownersResponse.json();
         setData(json);
       } catch (err) {
@@ -57,7 +86,7 @@ export default function Home() {
       }
     };
     fetchData();
-  }, []);
+  }, [filter]);
 
   return (
     <div>
@@ -78,10 +107,34 @@ export default function Home() {
         </div>
       ) : (
         <div className={styles.container}>
-          <SiteHead name={'Burn Board'}/>
+          <SiteHead name={"Burn Board"} />
           <h1>Forgotten Runes Wizard&apos;s Cult Burn Board</h1>
-          <h3>Does your flame burn the brightest?</h3>
           <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <img
+              onClick={() => setFilter("flame")}
+              style={{ cursor: "pointer" }}
+              height="15"
+              src="/icon_Flames.png"
+              alt="Flame"
+            />
+            |
+            <img
+              onClick={() => setFilter("treatBox")}
+              style={{ cursor: "pointer" }}
+              height="15"
+              src="/treat-box.png"
+              alt="Flame"
+            />
+          </div>
+          <div
+            ref={scrollContainerRef}
             style={{
               height: "100vh",
               width: "95vw",
@@ -93,7 +146,7 @@ export default function Home() {
               maxWidth: 800,
             }}
           >
-            <MainView data={data} />
+            <MainView data={data} filter={filter} />
           </div>
         </div>
       )}
