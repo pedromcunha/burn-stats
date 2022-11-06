@@ -76,6 +76,7 @@ export default function Home() {
             behavior: "smooth",
           });
         }
+        setData({});
         const ownersResponse = await fetch(
           `/api/leaderboard-data?filter=${filter}`
         );
@@ -90,7 +91,7 @@ export default function Home() {
 
   return (
     <div>
-      {!data ? (
+      {!data || !data.leaderboard ? (
         <div
           style={{
             display: "flex",
