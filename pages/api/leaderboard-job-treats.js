@@ -7,12 +7,12 @@ const RESERVOIR_KEY = process.env.NEXT_PUBLIC_RESERVOIR_API_KEY;
 export default async function handler(req, res) {
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-    const flameContract = "0x31158181b4b91a423bfdc758fc3bf8735711f9c5";
-    let flameBurners = {};
+    const treatBoxContract = "0x59775fD5F266C216D7566eB216153aB8863C9c84";
+    let treatBoxBurners = {};
     //Read file from bucket
     const bucketReadResponse = await supabase.storage
       .from("leaderboard")
-      .download("flame");
+      .download("treatBox");
     if (!bucketReadResponse.error && bucketReadResponse.data.text) {
       const text = await bucketReadResponse.data.text();
       const leaderboardJson = JSON.parse(text);
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     for (let i = 0; i < maximumRequests; i++) {
       console.log("Requesting page ", i);
       let transfersResponse = await fetch(
-        `https://api.reservoir.tools/transfers/bulk/v1?token=${flameContract}:0&limit=1000${continuation}`,
+        `https://api.reservoir.tools/transfers/bulk/v1?contract=${treatBoxContract}&limit=1000${continuation}`,
         {
           headers: {
             "x-api-key": RESERVOIR_KEY,
@@ -44,23 +44,24 @@ export default async function handler(req, res) {
       if (data.transfers) {
         data.transfers.forEach((transfer) => {
           if (transfer.to === "0x0000000000000000000000000000000000000000") {
-            const count = flameBurners[transfer.from]
-              ? flameBurners[transfer.from]
+            const count = treatBoxBurners[transfer.from]
+              ? treatBoxBurners[transfer.from]
               : 0;
-            if (flameBurners[transfer.from] !== undefined) {
-              flameBurners[transfer.from].burnCount =
-                flameBurners[transfer.from].burnCount + Number(transfer.amount);
+            if (treatBoxBurners[transfer.from] !== undefined) {
+              treatBoxBurners[transfer.from].burnCount =
+                treatBoxBurners[transfer.from].burnCount +
+                Number(transfer.amount);
               if (
                 transfer.timestamp >
-                flameBurners[transfer.from].latestBurn.timestamp
+                treatBoxBurners[transfer.from].latestBurn.timestamp
               ) {
-                flameBurners[transfer.from].latestBurn = {
+                treatBoxBurners[transfer.from].latestBurn = {
                   timestamp: transfer.timestamp,
                   txHash: transfer.txHash,
                 };
               }
             } else {
-              flameBurners[transfer.from] = {
+              treatBoxBurners[transfer.from] = {
                 address: transfer.from,
                 burnCount: Number(transfer.amount),
                 latestBurn: {
@@ -80,14 +81,14 @@ export default async function handler(req, res) {
       }
     }
     const leaderboardData = {
-      leaderboard: Object.values(flameBurners).sort(
+      leaderboard: Object.values(treatBoxBurners).sort(
         (a, b) => b.burnCount - a.burnCount
       ),
       lastUpdated: new Date().getTime(),
     };
     const uploadResponse = await supabase.storage
       .from("leaderboard")
-      .update("flame", JSON.stringify(leaderboardData));
+      .update("treatBox", JSON.stringify(leaderboardData));
     if (uploadResponse.error) {
       console.log(`Data upload error: ${uploadResponse.error}`);
       throw uploadResponse.error.message;
