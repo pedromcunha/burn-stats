@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: cURL request
-        run: curl -X POST -d {} https://burn-stats-iota.vercel.app/api/leadeboard-job
+        run: curl -X POST -d {} https://burnlog.vercel.app/api/leaderboard-job
       - name: cURL request
-        run: curl -X POST -d {} https://burn-stats-iota.vercel.app/api/leadeboard-job-treats
+        run: curl -X POST -d {} https://burnlog.vercel.app/api/leaderboard-job-treats
